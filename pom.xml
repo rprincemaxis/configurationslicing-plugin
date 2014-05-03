@@ -4,7 +4,7 @@
 		<groupId>org.jvnet.hudson.plugins</groupId>
 		<artifactId>plugin</artifactId>
 		<version>1.395</version>
-		<relativePath>../pom.xml</relativePath>
+		<!-- <relativePath>../pom.xml</relativePath> -->
 	</parent>
 	<artifactId>configurationslicing</artifactId>
 	<packaging>hpi</packaging>
@@ -93,7 +93,13 @@
 			<version>1.0</version>
 			<optional>true</optional>
 		</dependency>
-	</dependencies>
+                <dependency>
+                    <groupId>org.jvnet.hudson.plugins</groupId>
+                    <artifactId>powershell</artifactId>
+                    <version>1.2</version>
+                    <optional>true</optional>
+                </dependency>        
+        </dependencies>
 
     <scm>
         <connection>scm:git:git@github.com:jenkinsci/configurationslicing-plugin.git</connection>
