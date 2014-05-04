@@ -43,11 +43,6 @@ public class PerforceViewSpecSlicer extends UnorderedStringSlicer<AbstractProjec
             return item.getFullName();
         }
 
-        @Override
-        public boolean isIndexUsed(int count) {
-            return count > 1;
-        }
-
         public List<String> getValues(AbstractProject<?, ?> item) {
             List<String> content = new ArrayList<String>();
             SCM scm = item.getScm();
