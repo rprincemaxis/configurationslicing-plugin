@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>configurationslicing</artifactId>
 	<packaging>hpi</packaging>
-	<version>1.39-SNAPSHOT</version>
+	<version>1.39-maxis</version>
 	<name>Configuration Slicing plugin</name>
 	<description>Allows configuration of a single property across a group of projects</description>
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/Configuration+Slicing+Plugin</url>
@@ -19,6 +19,11 @@
 			<name>Jacob Robertson</name>
 			<email>jacob.robertson.work@gmail.com</email>
 		</developer>
+                <developer>
+                    <id>ryan_prince</id>
+                    <name>Ryan Prince</name>
+                    <email>rprince@maxis.com</email>
+                </developer>
 	</developers>
 
 	<dependencies>
@@ -98,7 +103,13 @@
                     <artifactId>powershell</artifactId>
                     <version>1.2</version>
                     <optional>true</optional>
-                </dependency>        
+                </dependency>
+                <dependency>
+                    <groupId>org.jvnet.hudson.plugins</groupId>
+                    <artifactId>perforce</artifactId>
+                    <version>1.3.27</version>
+                    <optional>true</optional>
+                </dependency>
         </dependencies>
 
     <scm>
