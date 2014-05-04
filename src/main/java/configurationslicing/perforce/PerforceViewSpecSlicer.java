@@ -27,27 +27,27 @@ public class PerforceViewSpecSlicer extends UnorderedStringSlicer<AbstractProjec
         public String getDefaultValueString() {
             return NOTHING;
         }
-        
+
         @Override
         public String getName() {
-                return "Perforce ViewSpec";
+            return "Perforce ViewSpec";
         }
 
         @Override
         public String getUrl() {
-                return "p4viewspecslicer";
+            return "p4viewspecslicer";
         }
 
 
         public String getName(AbstractProject<?, ?> item) {
             return item.getFullName();
         }
-        
+
         @Override
         public boolean isIndexUsed(int count) {
-        	return count > 1;
+            return count > 1;
         }
-        
+
         public List<String> getValues(AbstractProject<?, ?> item) {
             List<String> content = new ArrayList<String>();
             SCM scm = item.getScm();
@@ -62,7 +62,7 @@ public class PerforceViewSpecSlicer extends UnorderedStringSlicer<AbstractProjec
                 }
             }
             if (content.isEmpty()) {
-            	content.add(NOTHING);
+                content.add(NOTHING);
             }
 
             return content;
@@ -70,16 +70,16 @@ public class PerforceViewSpecSlicer extends UnorderedStringSlicer<AbstractProjec
 
         @SuppressWarnings("unchecked")
         public List<AbstractProject<?, ?>> getWorkDomain() {
-        	List<AbstractProject<?, ?>> list = new ArrayList<AbstractProject<?, ?>>();
-        	List<AbstractProject> temp = Hudson.getInstance().getAllItems(AbstractProject.class);
-        	for (AbstractProject p: temp) {
-        		if (p instanceof Project || p instanceof MatrixProject) {
-        			list.add(p);
-        		}
-        	}
-        	return list;
+            List<AbstractProject<?, ?>> list = new ArrayList<AbstractProject<?, ?>>();
+            List<AbstractProject> temp = Hudson.getInstance().getAllItems(AbstractProject.class);
+            for (AbstractProject p: temp) {
+                if (p instanceof Project || p instanceof MatrixProject) {
+                    list.add(p);
+                }
+            }
+            return list;
         }
-                
+
         public boolean setValues(AbstractProject<?, ?> item, List<String> list) {
             SCM scm = item.getScm();
             String projectPath = list.iterator().next();
@@ -90,8 +90,8 @@ public class PerforceViewSpecSlicer extends UnorderedStringSlicer<AbstractProjec
                 p4scm.setUseStreamDepot(false);
                 p4scm.setUseClientSpec(false);
                 p4scm.setProjectPath(projectPath);
-            }            
-            
+            }
+
             return true;
         }
 
