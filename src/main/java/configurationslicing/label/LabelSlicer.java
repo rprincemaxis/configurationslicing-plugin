@@ -1,9 +1,11 @@
 package configurationslicing.label;
 
+import antlr.ANTLRException;
 import hudson.Extension;
 import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Label;
+import hudson.model.labels.LabelAtom;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -57,7 +59,15 @@ public class LabelSlicer extends UnorderedStringSlicer<AbstractProject<?,?>>{
             if(ROAMING.equals(labelName)) {
                 label = null;
             } else {
-                label = Hudson.getInstance().getLabel(labelName);
+                if (labelName.equalsIgnoreCase("master")) {
+                    label = new LabelAtom("master");
+                } else {
+                    try {
+                        label = Label.parseExpression(labelName);
+                    } catch (ANTLRException e) {
+                        return false;
+                    }
+                }
                 if(label == null) return false;
             }
             try {
