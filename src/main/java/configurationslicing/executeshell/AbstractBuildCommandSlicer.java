@@ -114,28 +114,18 @@ public abstract class AbstractBuildCommandSlicer<B extends Builder> extends Unor
             
             // add any new ones (should always add to the end, but might not if the original command was empty)
             for (int i = 0; i < maxLen; i++) {
-				if (oldBuilders[i] == null && newBuilders[i] != null) {
-	                try {
-	                    buildersList.add(newBuilders[i]);
-	                } catch(java.io.IOException e) {
-	                    System.err.println("IOException Thrown add builder value");
-	                    return false;
-	                }
-				}
-			}
+                if (oldBuilders[i] == null && newBuilders[i] != null) {
+                    buildersList.add(newBuilders[i]);
+                }
+            }
             
             // delete any old ones
             for (int i = 0; i < maxLen; i++) {
-				if (oldBuilders[i] != null && newBuilders[i] == null) {
-                    try {
-	                	// the remove command will persist the project
-	                    buildersList.remove(oldBuilders[i]);
-	                } catch(java.io.IOException e) {
-	                    System.err.println("IOException Thrown removing builder value");
-	                    return false;
-	                }
-				}
-			}
+                if (oldBuilders[i] != null && newBuilders[i] == null) {
+                    // the remove command will persist the project
+                    buildersList.remove(oldBuilders[i]);
+                    }
+            }
             
             return true;
         }

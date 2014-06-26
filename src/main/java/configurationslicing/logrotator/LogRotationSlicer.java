@@ -120,8 +120,13 @@ public abstract class LogRotationSlicer extends UnorderedStringSlicer<AbstractPr
             LogRotator newlogrotator = new LogRotator(days, builds, artifactDaysToKeep, artifactNumToKeep);
             
             if (!LogRotationSlicer.equals(newlogrotator, logrotator)) {
-	            item.setLogRotator(newlogrotator);
-	            try {
+                    try {
+                        item.setLogRotator(newlogrotator);
+                    } catch (IOException e) {
+                            System.err.println("IOException Thrown removing wrapper value");
+                            return false;
+                    }
+                    try {
 	                item.save();
 	            } catch (IOException e) {
 	                e.printStackTrace();
