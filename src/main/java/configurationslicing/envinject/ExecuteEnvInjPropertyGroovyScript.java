@@ -46,7 +46,7 @@ public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job
 
         @Override
         public String getUrl() {
-            return "GlobalEnvInjScriptSlicing";
+            return "EnvInjGroovyScriptSlicing";
         }
 
 
