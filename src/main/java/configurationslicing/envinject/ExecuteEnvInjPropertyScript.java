@@ -24,13 +24,13 @@ import org.jenkinsci.plugins.envinject.EnvInjectJobPropertyInfo;
  */
 
 @Extension
-public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job<?,?>> {
+public class ExecuteEnvInjPropertyScript extends UnorderedStringSlicer<Job<?,?>> {
 
-    public ExecuteEnvInjPropertyGroovyScript() {
-        super(new EnvInjPropertyGroovyScriptSliceSpec());
+    public ExecuteEnvInjPropertyScript() {
+        super(new EnvInjPropertyScriptSliceSpec());
     }
 
-    public static class EnvInjPropertyGroovyScriptSliceSpec extends UnorderedStringSlicer.UnorderedStringSlicerSpec<Job<?,?>> {
+    public static class EnvInjPropertyScriptSliceSpec extends UnorderedStringSlicer.UnorderedStringSlicerSpec<Job<?,?>> {
 
         public static final String DISABLED = "(disabled)";
         public static final String ENABLED = "(enabled)";
@@ -41,12 +41,12 @@ public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job
 
         @Override
         public String getName() {
-            return "Environment Inject (before SCM checkout) Groovy Script Content";
+            return "Environment Inject (before SCM checkout) Script Content";
         }
 
         @Override
         public String getUrl() {
-            return "EnvInjGroovyScriptSlicing";
+            return "EnvInjScriptSlicing";
         }
 
 
@@ -59,7 +59,7 @@ public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
             if (null != envInjectJobProperty && envInjectJobProperty.isOn()) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectJobProperty.getInfo();
-                content.add(envInjectJobPropertyInfo.getGroovyScriptContent());
+                content.add(envInjectJobPropertyInfo.getScriptContent());
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);
@@ -82,42 +82,42 @@ public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job
 
         public boolean setValues(Job<?, ?> item, List<String> list) {
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
-            String groovyScriptContent = list.iterator().next();
+            String scriptContent = list.iterator().next();
             
-            if (DISABLED.equals(groovyScriptContent)) {
+            if (DISABLED.equals(scriptContent)) {
                 if (null != envInjectJobProperty) {
                     envInjectJobProperty.setOn(false);                
                 }
                 return true;
             }
             
-            if (ENABLED.equals(groovyScriptContent)) {
+            if (ENABLED.equals(scriptContent)) {
                 if (null != envInjectJobProperty) {
                     envInjectJobProperty.setOn(true);
                     return true;
                 }
                 else
                 {
-                    groovyScriptContent = null;
-                    return CreateEnvInjectJobProperty(item, groovyScriptContent);
+                    scriptContent = null;
+                    return CreateEnvInjectJobProperty(item, scriptContent);
                 }
             }
             
             if (null == envInjectJobProperty) {
-                return CreateEnvInjectJobProperty(item, groovyScriptContent);
+                return CreateEnvInjectJobProperty(item, scriptContent);
             } else {
-                return UpdateEnvInjectJobProperty(item, groovyScriptContent);
+                return UpdateEnvInjectJobProperty(item, scriptContent);
             }
         }
         
-        private boolean CreateEnvInjectJobProperty(Job<?, ?> item, String groovyScriptContent) {
+        private boolean CreateEnvInjectJobProperty(Job<?, ?> item, String scriptContent) {
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
             if (null == envInjectJobProperty) {
                 envInjectJobProperty = new EnvInjectJobProperty();
                 envInjectJobProperty.setOn(true);
                 envInjectJobProperty.setKeepBuildVariables(true);
                 envInjectJobProperty.setKeepJenkinsSystemVariables(true);
-                EnvInjectJobPropertyInfo envInjectJobPropertyInfo = new EnvInjectJobPropertyInfo(null, null, null, null, groovyScriptContent, true);
+                EnvInjectJobPropertyInfo envInjectJobPropertyInfo = new EnvInjectJobPropertyInfo(null, null, null, scriptContent, null, true);
                 envInjectJobProperty.setInfo(envInjectJobPropertyInfo);
                 try {
                     item.addProperty(envInjectJobProperty);
@@ -129,7 +129,7 @@ public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job
             return false;
         }
         
-        private boolean UpdateEnvInjectJobProperty(Job<?, ?> item, String groovyScriptContent) {
+        private boolean UpdateEnvInjectJobProperty(Job<?, ?> item, String scriptContent) {
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
             envInjectJobProperty.setOn(true);
             EnvInjectJobPropertyInfo oldEnvInjectJobPropertyInfo = envInjectJobProperty.getInfo();
@@ -138,8 +138,8 @@ public class ExecuteEnvInjPropertyGroovyScript extends UnorderedStringSlicer<Job
                         oldEnvInjectJobPropertyInfo.getPropertiesFilePath(),
                         oldEnvInjectJobPropertyInfo.getPropertiesContent(),
                         oldEnvInjectJobPropertyInfo.getScriptFilePath(),
-                        oldEnvInjectJobPropertyInfo.getScriptContent(),
-                        groovyScriptContent,
+                        scriptContent,
+                        oldEnvInjectJobPropertyInfo.getGroovyScriptContent(),
                         oldEnvInjectJobPropertyInfo.isLoadFilesFromMaster()
                     );
             envInjectJobProperty.setInfo(newEnvInjectJobPropertyInfo);

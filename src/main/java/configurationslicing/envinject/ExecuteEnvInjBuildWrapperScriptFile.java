@@ -27,13 +27,13 @@ import org.jenkinsci.plugins.envinject.EnvInjectJobPropertyInfo;
  */
 
 @Extension
-public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Project> {
+public class ExecuteEnvInjBuildWrapperScriptFile extends UnorderedStringSlicer<Project> {
 
-    public ExecuteEnvInjBuildWrapperScript() {
-        super(new EnvInjBuildWrapperScriptSliceSpec());
+    public ExecuteEnvInjBuildWrapperScriptFile() {
+        super(new EnvInjBuildWrapperScriptFileSliceSpec());
     }
 
-    public static class EnvInjBuildWrapperScriptSliceSpec extends UnorderedStringSlicer.UnorderedStringSlicerSpec<Project> {
+    public static class EnvInjBuildWrapperScriptFileSliceSpec extends UnorderedStringSlicer.UnorderedStringSlicerSpec<Project> {
 
         public static final String DISABLED = "(disabled)";
 
@@ -43,12 +43,12 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
 
         @Override
         public String getName() {
-            return "Environment Inject (post-SCM checkout) Script Content";
+            return "Environment Inject (post-SCM checkout) Script File";
         }
 
         @Override
         public String getUrl() {
-            return "EnvInjBuildScriptSlicing";
+            return "EnvInjBuildScriptFileSlicing";
         }
 
         public String getName(Project item) {
@@ -61,7 +61,7 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);            
             if (null != envInjectBuildWrapper) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectBuildWrapper.getInfo();
-                content.add(envInjectJobPropertyInfo.getScriptContent());
+                content.add(envInjectJobPropertyInfo.getScriptFilePath());
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);
@@ -78,15 +78,15 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
 
         public boolean setValues(Project item, List<String> list) {
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);
-            String scriptContent = list.iterator().next();
+            String scriptFilePath = list.iterator().next();
             
-            if (DISABLED.equals(scriptContent)) {
+            if (DISABLED.equals(scriptFilePath)) {
                 if (null != envInjectBuildWrapper) {
                     try {
                         item.getBuildWrappersList().remove(EnvInjectBuildWrapper.class);
                         return true;
                     } catch (IOException ex) {
-                        Logger.getLogger(ExecuteEnvInjBuildWrapperScript.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ExecuteEnvInjBuildWrapperScriptFile.class.getName()).log(Level.SEVERE, null, ex);
                         return false;
                     }
                 }
@@ -94,9 +94,9 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
             }
             
             if (null == envInjectBuildWrapper) {
-                return CreateEnvInjectBuildWrapper(item, scriptContent);
+                return CreateEnvInjectBuildWrapper(item, scriptFilePath);
             } else {
-                return UpdateEnvInjectBuildWrapper(item, scriptContent);
+                return UpdateEnvInjectBuildWrapper(item, scriptFilePath);
             }
         }
         
@@ -111,11 +111,11 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
             return envInjectBuildWrapper;
         }
         
-        private boolean CreateEnvInjectBuildWrapper(Project item, String scriptContent) {
+        private boolean CreateEnvInjectBuildWrapper(Project item, String scriptFilePath) {
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);
             if (null == envInjectBuildWrapper) {
                 envInjectBuildWrapper = new EnvInjectBuildWrapper();
-                EnvInjectJobPropertyInfo envInjectJobPropertyInfo = new EnvInjectJobPropertyInfo(null, null, null, scriptContent, null, true);
+                EnvInjectJobPropertyInfo envInjectJobPropertyInfo = new EnvInjectJobPropertyInfo(null, null, scriptFilePath, null, null, true);
                 envInjectBuildWrapper.setInfo(envInjectJobPropertyInfo);
                 item.getBuildWrappersList().add(envInjectBuildWrapper);
                 return true;
@@ -123,7 +123,7 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
             return false;
         }
         
-        private boolean UpdateEnvInjectBuildWrapper(Project item, String scriptContent) {
+        private boolean UpdateEnvInjectBuildWrapper(Project item, String scriptFilePath) {
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);
             if (null != envInjectBuildWrapper) {
                 EnvInjectJobPropertyInfo oldEnvInjectJobPropertyInfo = envInjectBuildWrapper.getInfo();
@@ -131,8 +131,8 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
                         new EnvInjectJobPropertyInfo(
                             oldEnvInjectJobPropertyInfo.getPropertiesFilePath(),
                             oldEnvInjectJobPropertyInfo.getPropertiesContent(),
-                            oldEnvInjectJobPropertyInfo.getScriptFilePath(),
-                            scriptContent,
+                            scriptFilePath,
+                            oldEnvInjectJobPropertyInfo.getScriptContent(),
                             oldEnvInjectJobPropertyInfo.getGroovyScriptContent(),
                             oldEnvInjectJobPropertyInfo.isLoadFilesFromMaster()
                         );
