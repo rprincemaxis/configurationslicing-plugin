@@ -61,7 +61,11 @@ public class ExecuteEnvInjBuildWrapperPropertiesFile extends UnorderedStringSlic
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);            
             if (null != envInjectBuildWrapper) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectBuildWrapper.getInfo();
-                content.add(envInjectJobPropertyInfo.getPropertiesFilePath());
+                String propertiesFilePath = envInjectJobPropertyInfo.getPropertiesFilePath();
+                if (null != propertiesFilePath) {
+                    propertiesFilePath = "";
+                }
+                content.add(propertiesFilePath);
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);

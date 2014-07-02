@@ -59,7 +59,11 @@ public class ExecuteEnvInjPropertyPropertiesFile extends UnorderedStringSlicer<J
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
             if (null != envInjectJobProperty && envInjectJobProperty.isOn()) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectJobProperty.getInfo();
-                content.add(envInjectJobPropertyInfo.getPropertiesFilePath());
+                String propertiesFilePath = envInjectJobPropertyInfo.getPropertiesFilePath();
+                if (null != propertiesFilePath) {
+                    propertiesFilePath = "";
+                }
+                content.add(propertiesFilePath);
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);

@@ -59,7 +59,11 @@ public class ExecuteEnvInjPropertyScriptFile extends UnorderedStringSlicer<Job<?
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
             if (null != envInjectJobProperty && envInjectJobProperty.isOn()) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectJobProperty.getInfo();
-                content.add(envInjectJobPropertyInfo.getScriptFilePath());
+                String scriptFilePath = envInjectJobPropertyInfo.getScriptFilePath();
+                if (null != scriptFilePath) {
+                    scriptFilePath = "";
+                }
+                content.add(scriptFilePath);
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);

@@ -61,7 +61,11 @@ public class ExecuteEnvInjBuildWrapperScript extends UnorderedStringSlicer<Proje
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);            
             if (null != envInjectBuildWrapper) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectBuildWrapper.getInfo();
-                content.add(envInjectJobPropertyInfo.getScriptContent());
+                String scriptContent = envInjectJobPropertyInfo.getScriptContent();
+                if (null != scriptContent) {
+                    scriptContent = "";
+                }
+                content.add(scriptContent);
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);

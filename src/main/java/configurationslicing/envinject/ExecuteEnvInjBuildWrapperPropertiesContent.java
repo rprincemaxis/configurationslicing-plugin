@@ -61,7 +61,11 @@ public class ExecuteEnvInjBuildWrapperPropertiesContent extends UnorderedStringS
             EnvInjectBuildWrapper envInjectBuildWrapper = GetEnvInjectBuildWrapper(item);            
             if (null != envInjectBuildWrapper) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectBuildWrapper.getInfo();
-                content.add(envInjectJobPropertyInfo.getPropertiesContent());
+                String propertiesContent = envInjectJobPropertyInfo.getPropertiesContent();
+                if (null == propertiesContent) {
+                    propertiesContent = "";
+                }
+                content.add(propertiesContent);
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);

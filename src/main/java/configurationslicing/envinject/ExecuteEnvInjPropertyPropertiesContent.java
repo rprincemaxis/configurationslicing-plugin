@@ -59,7 +59,11 @@ public class ExecuteEnvInjPropertyPropertiesContent extends UnorderedStringSlice
             EnvInjectJobProperty envInjectJobProperty = item.getProperty(EnvInjectJobProperty.class);
             if (null != envInjectJobProperty && envInjectJobProperty.isOn()) {
                 EnvInjectJobPropertyInfo envInjectJobPropertyInfo = envInjectJobProperty.getInfo();
-                content.add(envInjectJobPropertyInfo.getPropertiesContent());
+                String propertiesContent = envInjectJobPropertyInfo.getPropertiesContent();
+                if (null != propertiesContent) {
+                    propertiesContent = "";
+                }
+                content.add(propertiesContent);
             }
             if (content.isEmpty()) {
                 content.add(DISABLED);
