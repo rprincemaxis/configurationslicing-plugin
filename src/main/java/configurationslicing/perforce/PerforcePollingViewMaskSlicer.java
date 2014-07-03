@@ -53,6 +53,9 @@ public class PerforcePollingViewMaskSlicer extends UnorderedStringSlicer<Abstrac
                 if(p4scm.isUseViewMask())
                 {
                     String viewMask = p4scm.getViewMask();
+                    if (null == viewMask) {
+                        viewMask = "";
+                    }
                     content.add(viewMask);
                 }
             }
@@ -69,7 +72,13 @@ public class PerforcePollingViewMaskSlicer extends UnorderedStringSlicer<Abstrac
             List<AbstractProject> temp = Hudson.getInstance().getAllItems(AbstractProject.class);
             for (AbstractProject p: temp) {
                 if (p instanceof Project || p instanceof MatrixProject) {
-                    list.add(p);
+                    // Only consider jobs with perforce as the SCM - we don't
+                    //  want to make assumptions about switching SCM for a job
+                    //  to update the view mask
+                    SCM scm = p.getScm();
+                    if (scm instanceof PerforceSCM) {
+                        list.add(p);
+                    }
                 }
             }
             return list;
@@ -79,14 +88,19 @@ public class PerforcePollingViewMaskSlicer extends UnorderedStringSlicer<Abstrac
             SCM scm = item.getScm();
             String viewMask = list.iterator().next();
 
-            if (scm instanceof PerforceSCM && !DISABLED.equals(viewMask))
+            if (scm instanceof PerforceSCM)
             {
                 PerforceSCM p4scm = (PerforceSCM) scm;
-                p4scm.setUseViewMask(true);
-                p4scm.setUseViewMaskForPolling(true);
-                p4scm.setUseViewMaskForChangeLog(true);
-                p4scm.setUseViewMaskForSyncing(false);
-                p4scm.setViewMask(viewMask);
+                if (!DISABLED.equals(viewMask)) {
+                    p4scm.setUseViewMask(true);
+                    p4scm.setUseViewMaskForPolling(true);
+                    p4scm.setUseViewMaskForChangeLog(true);
+                    p4scm.setUseViewMaskForSyncing(false);
+                    p4scm.setViewMask(viewMask);
+                }
+                else {
+                    p4scm.setUseViewMask(false);
+                }
             }
 
             return true;
